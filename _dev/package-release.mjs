@@ -12,7 +12,7 @@
  *   GH_REPO=your-name/dsh-ida node _dev/package-release.mjs   # 顺便写 repository 字段
  */
 
-import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync } from 'node:fs'
+import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync, renameSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -22,8 +22,18 @@ const outDir = resolve(process.argv[2] || join(srcDir, '..', 'release', 'dsh-ida
 
 const COPY = ['index.js', 'README.md', 'CHANGELOG.md', 'LICENSE', 'icon.svg', 'src', 'locale', '_dev']
 
+// 重生成时保留发布目录里的 .git，否则每次打包都会丢历史
+const keepGit = `${outDir}.gitkeep`
+const hasGit = existsSync(join(outDir, '.git'))
+if (hasGit) {
+  if (existsSync(keepGit)) rmSync(keepGit, { recursive: true, force: true })
+  renameSync(join(outDir, '.git'), keepGit)
+}
+
 if (existsSync(outDir)) rmSync(outDir, { recursive: true, force: true })
 mkdirSync(outDir, { recursive: true })
+
+if (hasGit) renameSync(keepGit, join(outDir, '.git'))
 
 for (const item of COPY) {
   const from = join(srcDir, item)

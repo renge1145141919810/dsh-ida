@@ -8,6 +8,28 @@
 模型 → dsh-ida → mcp-plugin.py（IDA 内）→ IDB
 ```
 
+## 依赖：必须有 IDA 侧服务，本仓库不含
+
+**dsh-ida 只是客户端。** 它连 `127.0.0.1:13337/mcp`，对端必须有一个 IDA 插件在跑 ——
+也就是 [ida-pro-mcp](https://github.com/mrexodia/ida-pro-mcp) 的 `mcp-plugin.py`。
+没有它，除了工作区相关工具外全部不可用。
+
+两种形态都支持：
+
+| IDA 侧形态 | 协议 | 说明 |
+| --- | --- | --- |
+| 旧版单文件 `mcp-plugin.py` | 自定义 JSON-RPC：`POST /mcp`，method 直接是函数名 | 本仓库的兼容补丁（`_dev/ida-compat.py`）**只针对这种** |
+| 新版 ida-pro-mcp | 标准 MCP：`initialize` + `tools/list` + `tools/call` | `src/caps.js` 里有对应的工具名映射 |
+
+**不支持的：**
+
+- **任意第三方 IDA MCP 服务器**：工具名必须命中 `src/caps.js` 里的候选列表
+  （如 `decompile`、`lookup_funcs`、`rename`），否则调不通；要接别的实现得先改 `caps.js`。
+- **没有 IDA 时**：只有 `ida_workspace`、`ida_export` 这类本地功能可用，读代码、改名、patch 都不行。
+
+连接自检：调一次 `ida_status`。它会区分「连不上」「协议认不出」「连上了但没打开数据库」，
+并把排查顺序列出来。
+
 ## 特性
 
 - **一次调用拿全一个函数**：伪代码（逐行地址）、可选反汇编、交叉引用、调用方/被调方、工作区里已有的命名和注释
@@ -20,9 +42,6 @@
 ## 环境要求
 
 - IDA Pro **8.3+**（8.x 需要打兼容补丁，见下）
-- [ida-pro-mcp](https://github.com/mrexodia/ida-pro-mcp) 的 `mcp-plugin.py` 已装进 IDA，服务默认监听 `127.0.0.1:13337`
-- DSH（DeepSeek Harness） Desktop
-- Node.js 18+
 
 ## 安装
 
