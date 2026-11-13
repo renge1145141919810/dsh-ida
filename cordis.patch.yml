@@ -1,0 +1,4 @@
+- insert:
+    - id: dsh-ida
+      name: dsh-ida
+      config: {}

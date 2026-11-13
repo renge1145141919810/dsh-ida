@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "IDA Pro 分析桥",
+    "description": "把本机 IDA Pro 接到 DSH：读伪代码、批量写注释与改名、带台账的 patch 与回滚，并把分析进度存成可接着做的工作区。"
+  }
+}

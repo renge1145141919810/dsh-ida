@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "IDA Pro bridge",
+    "description": "Drives the local IDA Pro from DSH: read pseudocode, batch-annotate and rename, patch with a rollback ledger, and keep analysis progress in a resumable workspace."
+  }
+}

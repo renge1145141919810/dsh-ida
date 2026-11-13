@@ -1,0 +1,42 @@
+{
+  "name": "dsh-ida",
+  "version": "0.3.0",
+  "description": "把 IDA Pro 接进 DSH 的逆向插件：伪代码直读、批量注释与改名、带台账的 patch、持久工作区，以及 IDA 8.x 的 SDK 兼容层。A DSH plugin that brings IDA Pro into the agent loop.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "ida",
+    "ida-pro",
+    "reverse-engineering",
+    "decompiler",
+    "dsh",
+    "patch"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "src",
+    "locale",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "test": "node _dev/selftest.mjs",
+    "test:offline": "node _dev/offline-workspace.mjs .tmp-offline"
+  }
+}
